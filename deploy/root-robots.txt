@@ -1,0 +1,6 @@
+# Put this at https://hyperpkpd.com/robots.txt (search engines only read robots.txt from the site root).
+# If the root already has a robots.txt, just add the Sitemap line to it.
+User-agent: *
+Allow: /
+
+Sitemap: https://hyperpkpd.com/tutor/sitemap.xml

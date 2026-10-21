@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="{{LANG}}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>{{TITLE}}</title>
+    <meta name="description" content="{{DESCRIPTION}}" />
+    <meta name="keywords" content="{{KEYWORDS}}" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="author" content="HyperPKPD" />
+    <link rel="canonical" href="{{URL}}" />
+    <link rel="alternate" hreflang="{{LANG}}" href="{{URL}}" />
+
+    <!-- Icons -->
+    <link rel="icon" href="{{BASE}}favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="{{BASE}}favicon.ico" sizes="48x48" />
+    <link rel="icon" href="{{BASE}}icons/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="{{BASE}}icons/favicon-16.png" type="image/png" sizes="16x16" />
+    <link rel="apple-touch-icon" href="{{BASE}}icons/apple-touch-icon.png" sizes="180x180" />
+
+    <!-- Installable web app -->
+    <link rel="manifest" href="{{BASE}}manifest.webmanifest" />
+    <meta name="application-name" content="{{SHORT_NAME}}" />
+    <meta name="theme-color" content="{{THEME}}" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="{{SHORT_NAME}}" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="msapplication-TileColor" content="{{THEME}}" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- Open Graph / social -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="{{NAME}}" />
+    <meta property="og:title" content="{{TITLE}}" />
+    <meta property="og:description" content="{{DESCRIPTION}}" />
+    <meta property="og:url" content="{{URL}}" />
+    <meta property="og:locale" content="{{LOCALE}}" />
+    <meta property="og:image" content="{{OG_IMAGE}}" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="HyperPKPD: concentration–time curves for three populations" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{TITLE}}" />
+    <meta name="twitter:description" content="{{DESCRIPTION}}" />
+    <meta name="twitter:image" content="{{OG_IMAGE}}" />
+    <meta name="twitter:image:alt" content="HyperPKPD: concentration–time curves for three populations" />
+
+    <!-- Structured data -->
+    <script type="application/ld+json">{{JSONLD}}</script>
+  </head>
+  <body>
+    <!-- React replaces everything inside #root on load. Crawlers and no-JS visitors see this text. -->
+    <div id="root">
+      <main style="font-family:system-ui,sans-serif;max-width:46rem;margin:2rem auto;padding:0 1rem;line-height:1.5">
+        <h1>{{NAME}}: Interactive Population PK and Exposure–Response</h1>
+        <p>{{DESCRIPTION}}</p>
+        <ul>{{FEATURES}}</ul>
+        <noscript><p>This app needs JavaScript. Please enable it to use the simulator.</p></noscript>
+      </main>
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

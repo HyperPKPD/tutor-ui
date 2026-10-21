@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+/* Class-based dark mode (toggled by ThemeContext) so `dark:` utilities work */
+@custom-variant dark (&:where(.dark, .dark *));
+
+html, body, #root { height: 100%; }
+body { margin: 0; }
