@@ -7,7 +7,7 @@
 **See pharmacokinetics and exposure–response *move*.**
 Drag a slider, watch three populations diverge, and understand why.
 
-### [Try the live demo: hyperpkpd.com/tutor](https://hyperpkpd.com/tutor) 
+### 👉 [Try the live demo: hyperpkpd.com/tutor](https://hyperpkpd.com/tutor) 👈
 
 Free · runs entirely in your browser · installable · works offline
 

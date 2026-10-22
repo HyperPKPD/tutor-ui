@@ -10,7 +10,7 @@ export const InstallButton: React.FC<{ isDark: boolean }> = ({ isDark }) => {
   if (state.kind === 'installed' || state.kind === 'unavailable') return null;
 
   const cls = `flex items-center gap-1.5 px-2.5 py-1 rounded border text-xs font-semibold cursor-pointer ${
-    isDark ? 'border-blue-500 bg-blue-600 text-white hover:bg-blue-500' : 'border-blue-600 bg-blue-600 text-white hover:bg-blue-700'
+    isDark ? 'border-blue-500 bg-blue-600 text-white hover:bg-blue-500' : 'border-white bg-white text-blue-700 hover:bg-blue-50'
   }`;
 
   return (

@@ -23,6 +23,12 @@ export const ANALYSIS_MODES: { value: AnalysisMode; label: string }[] = [
 ];
 export const DEFAULT_ANALYSIS_MODE: AnalysisMode = 'popPK';
 
+/** Help / About modal. */
+export const HELP = {
+  parentUrl: 'https://hyperpkpd.com/',
+  author: 'Obinna Obianom',
+};
+
 // ───────────────────────── Models & routes ─────────────────────────
 export const MODEL_GROUPS: { label: string; options: { value: ModelType; label: string }[] }[] = [
   {

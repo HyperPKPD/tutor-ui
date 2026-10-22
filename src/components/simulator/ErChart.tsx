@@ -294,7 +294,9 @@ export const ErChart: React.FC<Props> = ({ isDark, title, model, series, refIdx 
         </div>
       </div>
 
-      <div className="relative w-full select-none cursor-crosshair" style={{ height: CHART.heightPx }}>
+      <div className="w-full overflow-x-auto">
+      {/* On narrow screens the chart keeps a readable minimum width (swipe sideways) and its height follows the aspect ratio */}
+      <div className="relative w-full min-w-[600px] select-none cursor-crosshair" style={{ aspectRatio: `${W} / ${H}`, maxHeight: CHART.heightPx }}>
         <svg ref={svgRef} className="w-full h-full" viewBox={`0 0 ${W} ${H}`}
           onMouseMove={onMove} onMouseDown={onDown} onMouseUp={onUp}
           onMouseLeave={() => { setHover(null); setDragging(false); setDragStart(null); setDragCur(null); }}
@@ -446,6 +448,7 @@ export const ErChart: React.FC<Props> = ({ isDark, title, model, series, refIdx 
             })}
           </div>
         )}
+      </div>
       </div>
 
       <div className={`mt-2 text-[11px] font-mono flex flex-wrap items-center justify-between border-t pt-2 gap-x-4 gap-y-1 ${

@@ -287,7 +287,7 @@ export const PkSimulator: React.FC = () => {
 
       <div
         ref={splitRef}
-        className={`flex-1 flex flex-col lg:flex-row overflow-hidden ${resizing ? 'select-none' : ''}`}
+        className={`flex flex-col lg:flex-row lg:flex-1 lg:min-h-0 lg:overflow-hidden ${resizing ? 'select-none' : ''}`}
         style={{ ['--panel-w' as string]: `${panelW}px` }}
       >
         {isEr ? (
@@ -339,7 +339,7 @@ export const PkSimulator: React.FC = () => {
           <span className={`h-10 w-0.5 rounded-full ${resizing ? 'bg-blue-500' : isDark ? 'bg-slate-600 group-hover:bg-blue-400' : 'bg-slate-300 group-hover:bg-blue-500'}`} />
         </div>
 
-        <div className="flex-1 p-4 space-y-4 overflow-y-auto min-w-0">
+        <div className="lg:flex-1 p-3 sm:p-4 space-y-4 lg:overflow-y-auto min-w-0">
           <QuizPanel key={quizId} isDark={isDark} pool={quizPool} poolId={quizId} />
 
           {/* Population visibility */}
@@ -352,7 +352,7 @@ export const PkSimulator: React.FC = () => {
                 <div key={name} className="inline-flex items-stretch">
                   <label
                     title={last ? 'At least one population must stay on' : on ? 'Hide from chart' : 'Show in chart'}
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-l border text-[11px] font-mono select-none ${
+                    className={`relative inline-flex items-center gap-1.5 px-2.5 py-1 rounded-l border text-[11px] font-mono select-none ${
                       last ? 'cursor-not-allowed' : 'cursor-pointer'
                     } ${on
                       ? isDark ? 'bg-slate-800 border-slate-600 text-slate-100' : 'bg-slate-100 border-slate-300 text-slate-900'

@@ -56,7 +56,7 @@ export const ErPopulationPanel: React.FC<Props> = ({
   const modelLabel = ER_MODELS.find((m) => m.value === model)?.label ?? model;
 
   return (
-    <div className={`w-full lg:w-(--panel-w) shrink-0 border-r overflow-y-auto text-xs ${
+    <div className={`w-full lg:w-(--panel-w) shrink-0 border-b lg:border-b-0 lg:border-r lg:overflow-y-auto text-xs ${
       isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'
     }`}>
       <PopTabStrip isDark={isDark} activeIdx={activeIdx} visible={visible} onSelect={onSelect} />

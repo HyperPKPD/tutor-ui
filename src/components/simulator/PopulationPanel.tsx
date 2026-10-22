@@ -61,7 +61,7 @@ export const PopulationPanel: React.FC<Props> = ({
   const kd = p.koff / p.kon;
 
   return (
-    <div className={`w-full lg:w-(--panel-w) shrink-0 border-r overflow-y-auto text-xs ${
+    <div className={`w-full lg:w-(--panel-w) shrink-0 border-b lg:border-b-0 lg:border-r lg:overflow-y-auto text-xs ${
       isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'
     }`}>
       <PopTabStrip isDark={isDark} activeIdx={activeIdx} visible={visible} onSelect={onSelect} />
