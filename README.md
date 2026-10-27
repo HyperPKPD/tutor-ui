@@ -4,7 +4,8 @@
 
 # HyperPKPD Tutor
 
-**See pharmacokinetics and exposure–response *move*.**
+**Not a shiny app**
+**See pharmacokinetics and exposure-response *move*.**
 Drag a slider, watch three populations diverge, and understand why.
 
 ### Try the live demo: [hyperpkpd.com/tutor](https://hyperpkpd.com/tutor) 
