@@ -164,8 +164,8 @@ export const HelpButton: React.FC<{ isDark: boolean }> = ({ isDark }) => {
         onClick={() => setOpen(true)}
         aria-label="Help and about"
         title="Help: how to use HyperPKPD"
-        className={`p-1.5 rounded border cursor-pointer ${
-          isDark ? 'border-slate-700 text-slate-300 hover:bg-slate-800' : 'border-blue-300 text-white hover:bg-blue-800'
+        className={`p-1.5 rounded cursor-pointer ${
+          isDark ? 'text-slate-300 hover:bg-slate-800' : 'text-white hover:bg-blue-800'
         }`}
       >
         <HelpCircle className="w-4 h-4" />

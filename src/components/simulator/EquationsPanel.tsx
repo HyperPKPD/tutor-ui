@@ -126,7 +126,8 @@ export const EquationsPanel: React.FC<Props> = ({ isDark, model, route, pop, pop
               <h5 className={h5}>One-Compartment First-Order Oral Bateman Equation</h5>
               <div className={box}>
                 <div>C(t) = [Dose · Ka / (V1 · (Ka - ke))] · [exp(-ke · t) - exp(-Ka · t)]</div>
-                <div className="text-slate-500 text-[10px]">where ke = CL / V1, t1/2 = ln(2) / ke = 0.69315 · V1 / CL</div>
+                <div className="text-slate-500 text-[10px]">where ke = CL / V1, t1/2 = ln(2) / ke = 0.69315 · V1 / CL (F = 1)</div>
+                <div className="text-slate-500 text-[10px]">Limit when Ka = ke: C(t) = (Dose/V1) · Ka · t · exp(−ke·t) (the simulator nudges Ka slightly to avoid this singularity)</div>
               </div>
             </div>
           )}
@@ -152,7 +153,7 @@ export const EquationsPanel: React.FC<Props> = ({ isDark, model, route, pop, pop
                 <div>dRL/dt = kon·L·R - (koff + kint)·RL</div>
                 <div className="pt-1 text-slate-500 text-[10px]">
                   L = free drug, R = free target, RL = drug–target complex (all central, nM). R(0) = R0 = ksyn/kdeg, RL(0) = 0.
-                  {route === 'iv' ? ' Each dose adds Dose/(MW·V1) to L.' : ' Each dose adds Dose/MW to Agut.'}
+                  {route === 'iv' ? ' Each dose adds (Dose·1000/MW)/V1 to L (Dose in mg, MW in kDa → nmol).' : ' Each dose adds Dose·1000/MW nmol to Agut (Dose in mg, MW in kDa).'}
                 </div>
               </div>
               <p className={note}>
@@ -220,14 +221,14 @@ export const EquationsPanel: React.FC<Props> = ({ isDark, model, route, pop, pop
               <div className="font-sans text-[11px] leading-relaxed">
                 Steady state is found by continuing to dose every τ until successive intervals stop changing{result.ssConverged ? '' : ' (not fully converged here: values are approximate)'}; the last plotted dose reaches {result.lastIntervalPctSs.toFixed(0)}% of the steady-state AUC.
                 Mass balance at steady state: Dose/τ = CL·L̄ + kint·V1·RL̄, so free-drug Cavg,ss is always below Dose/(CL·τ) = {(pop.doseMg / (eff.cl * pop.tauHours)).toFixed(2)} mg/L.
-                Total drug (free + complex) can sit above or below that value, because the complex is removed by kint instead of CL/V1.
+                Total drug (free + complex) Cavg,ss is above that value when kint·V1 &lt; CL and below it when kint·V1 &gt; CL, because the complex is removed by kint instead of CL.
               </div>
               {result.rMinPct !== null && <div>Lowest free target at steady state = {result.rMinPct.toFixed(0)}% of baseline R0</div>}
             </>
           ) : (
             <>
               <div className="font-bold text-purple-500 mb-1">Linear Superposition Formula:</div>
-              <div>C_total(t) = ∑ C_single(t - j·tau) for all j such that t ≥ j·tau</div>
+              <div>C_total(t) = ∑ C_single(t − j·tau), j = 0 … (number of doses − 1), counting only doses with j·tau ≤ t</div>
               <div className="mt-2 font-bold text-purple-500">True steady state (infinite dose train):</div>
               <div>Css(t) = ∑_i A_i·exp(−λ_i·t) / (1 − exp(−λ_i·tau)){isOral(model) ? ' − (∑_i A_i)·exp(−Ka·t) / (1 − exp(−Ka·tau))' : ''},  0 ≤ t ≤ tau</div>
               <div className="font-sans text-[11px] text-slate-500">Each exponential term of a single dose (A_i = its coefficient) is summed over all previous doses as a geometric series. The table's Cmax,ss, Cmin,ss and time ≥ MEC come from this curve, so they are true steady-state values whatever the number of doses plotted (the last simulated dose reaches {result.lastIntervalPctSs.toFixed(0)}% of steady-state AUC).</div>
@@ -262,10 +263,12 @@ export const EquationsPanel: React.FC<Props> = ({ isDark, model, route, pop, pop
             </>
           ) : (
             <>
-              <li><strong>Linear Pharmacokinetics:</strong> Elimination and absorption clearance operate within first-order non-saturated capacities.</li>
-              <li><strong>Instantaneous Mixing:</strong> The central compartment volume assumes prompt, homogenous distribution upon drug entry.</li>
+              <li><strong>Linear Pharmacokinetics:</strong> Distribution, elimination{isOral(model) ? ' and absorption are' : ' is'} first-order (non-saturable), so concentrations scale in proportion to dose.</li>
+              <li><strong>Instantaneous Mixing:</strong> Drug distributes immediately and uniformly within the central compartment{nPer > 0 ? '; exchange with the peripheral compartment(s) is first-order and the plotted concentration is the central one' : ''}.</li>
               <li><strong>Stationary Clearance:</strong> Metabolic and renal clearance parameters remain constant over time (no auto-induction or time-varying clearance).</li>
-              <li><strong>Complete Bioavailability:</strong> Absolute oral bioavailability factor F is assumed to equal 1.0 (apparent clearances expressed as CL/F).</li>
+              {isOral(model)
+                ? <li><strong>Complete Bioavailability:</strong> Absolute bioavailability F is assumed to equal 1.0, so CL and V1 are apparent values (CL/F, V/F); absorption is first-order with no lag time.</li>
+                : <li><strong>Intravenous Bolus:</strong> The whole dose enters the central compartment instantly at the dosing time (F = 1, no infusion duration).</li>}
               <li><strong>Superposition Validity:</strong> Successive doses sum linearly without pharmacokinetic drug-drug interaction or target receptor depletion.</li>
             </>
           )}

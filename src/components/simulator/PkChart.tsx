@@ -4,6 +4,8 @@ import { CHART, PERSISTENCE } from '../../config/appConfig';
 import { usePersistedState } from '../../db/usePersistedState';
 import * as sanitize from '../../db/sanitize';
 import { Segmented, faint, muted } from './ui';
+import { ChartDownload, type LegendItem } from './ChartDownload';
+import { DOWNLOAD } from '../../config/appConfig';
 
 export interface ChartSeries {
   name: string;
@@ -25,6 +27,9 @@ interface Props {
   refIdx: number;
   mec: number;
   mtc: number;
+  /** draw the shaded target therapeutic window (MEC–MTC) */
+  showWindow: boolean;
+  windowColor: string;
 }
 
 const { width: W, height: H } = CHART;
@@ -44,7 +49,7 @@ const niceStepY = (range: number) => {
 };
 const fmt = (v: number) => String(+v.toFixed(3));
 
-export const PkChart: React.FC<Props> = ({ isDark, title, dt, series, totalDuration, refIdx, mec, mtc }) => {
+export const PkChart: React.FC<Props> = ({ isDark, title, dt, series, totalDuration, refIdx, mec, mtc, showWindow, windowColor }) => {
   // Axis / scale / zoom settings are persisted (IndexedDB) so a refresh restores the exact view
   const [isLogScale, setIsLogScale] = usePersistedState(K.chartLog, D.isLogScale, sanitize.bool);
   const [showAxisMenu, setShowAxisMenu] = useState(false);
@@ -74,7 +79,7 @@ export const PkChart: React.FC<Props> = ({ isDark, title, dt, series, totalDurat
     return m;
   }, [shown]);
 
-  const defaultMaxY = Math.max(mtc * CHART.mtcHeadroom, dataMax * CHART.dataHeadroom, CHART.minYAxisMax);
+  const defaultMaxY = Math.max(showWindow ? mtc * CHART.mtcHeadroom : 0, dataMax * CHART.dataHeadroom, CHART.minYAxisMax);
   const activeYMin = zoomRange ? zoomRange.yMin : !autoYAxis ? customYMin : isLogScale ? CHART.logAxisMin : 0;
   const activeYMax = zoomRange ? zoomRange.yMax : !autoYAxis ? customYMax : defaultMaxY;
   const activeXMin = zoomRange ? zoomRange.xMin : !autoXAxis ? customXMin : 0;
@@ -301,11 +306,19 @@ export const PkChart: React.FC<Props> = ({ isDark, title, dt, series, totalDurat
             )}
           </div>
 
+          <ChartDownload isDark={isDark} getSvg={() => svgRef.current} title={title} fileBase={DOWNLOAD.fileBase.pk}
+            legend={[
+              ...(showWindow ? [{ label: `Target ${ref ? `(${ref.name.replace('Population ', 'Pop ')}) ` : ''}[${mec} – ${mtc} mg/L]`, color: windowColor, kind: 'box' } as LegendItem] : []),
+              ...shown.map((x): LegendItem => ({ label: x.name.replace('Population ', 'Pop '), color: x.color, kind: 'line' })),
+            ]} />
+
           <div className="hidden sm:flex items-center gap-3 text-xs font-mono flex-wrap">
-            <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
-              <span className="w-3 h-3 bg-emerald-500/20 border border-emerald-500 rounded-xs"></span>
-              <span>Target {ref ? `(${ref.name.replace('Population ', 'Pop ')})` : ''} [{mec} – {mtc} mg/L]</span>
-            </span>
+            {showWindow && (
+              <span className="flex items-center gap-1.5" style={{ color: windowColor }}>
+                <span className="w-3 h-3 rounded-xs border" style={{ borderColor: windowColor, backgroundColor: `${windowColor}33` }}></span>
+                <span>Target {ref ? `(${ref.name.replace('Population ', 'Pop ')})` : ''} [{mec} – {mtc} mg/L]</span>
+              </span>
+            )}
             {shown.map((s) => (
               <span key={s.name} className="flex items-center gap-1.5" style={{ color: s.color }}>
                 <span className="w-3 h-0.5" style={{ backgroundColor: s.color }}></span>
@@ -334,15 +347,19 @@ export const PkChart: React.FC<Props> = ({ isDark, title, dt, series, totalDurat
           </defs>
 
 
+          {showWindow && (
+            <>
           {/* Therapeutic window */}
           <rect x={X0} y={Math.max(Y0, getSimY(mtc))} width={X1 - X0}
             height={Math.max(0, getSimY(mec) - Math.max(Y0, getSimY(mtc)))}
-            fill="#10b981" fillOpacity={isDark ? 0.12 : 0.15} stroke="#10b981" strokeDasharray="4 2" strokeWidth="0.75" />
+            fill={windowColor} fillOpacity={isDark ? 0.12 : 0.15} stroke={windowColor} strokeDasharray="4 2" strokeWidth="0.75" />
           {rawY(mtc) >= Y0 && rawY(mtc) <= Y1 && (
             <text x={755} y={rawY(mtc) - 4} fill="#ef4444" fontSize="10" textAnchor="end" fontFamily="monospace">MTC ({mtc} mg/L)</text>
           )}
           {rawY(mec) >= Y0 && rawY(mec) <= Y1 && (
-            <text x={755} y={rawY(mec) + 12} fill="#10b981" fontSize="10" textAnchor="end" fontFamily="monospace">MEC ({mec} mg/L)</text>
+            <text x={755} y={rawY(mec) + 12} fill={windowColor} fontSize="10" textAnchor="end" fontFamily="monospace">MEC ({mec} mg/L)</text>
+          )}
+            </>
           )}
 
           {xTicks.map((t) => {

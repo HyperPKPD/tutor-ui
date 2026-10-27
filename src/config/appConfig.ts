@@ -35,8 +35,8 @@ export const MODEL_GROUPS: { label: string; options: { value: ModelType; label: 
     label: 'Linear PK',
     options: [
       { value: '3cmt_oral', label: '3-Compartment Oral' },
-      { value: '2cmt_oral', label: '2-Compartment Oral (run002 structure)' },
-      { value: '1cmt_oral', label: '1-Compartment Oral (run001 structure)' },
+      { value: '2cmt_oral', label: '2-Compartment Oral' },
+      { value: '1cmt_oral', label: '1-Compartment Oral' },
       { value: '3cmt_iv', label: '3-Compartment IV Bolus' },
       { value: '2cmt_iv', label: '2-Compartment IV Bolus' },
       { value: '1cmt_iv', label: '1-Compartment IV Bolus' },
@@ -229,6 +229,29 @@ export const SIM = {
   tmddSs: { relTol: 1e-4, maxIntervals: 5000, maxRk4Steps: 6_000_000 },
 };
 
+/** Target therapeutic window band colour (chart shading, MEC label, legend). */
+export const WINDOW_COLOR = {
+  default: '#10b981',
+  presets: ['#10b981', '#3b82f6', '#f59e0b', '#a855f7', '#ef4444', '#64748b'],
+};
+
+// ───────────────────────── Chart image download ─────────────────────────
+export const DOWNLOAD = {
+  defaults: { widthIn: 8, heightIn: 4, dpi: 300, title: true, transparent: false },
+  widthIn: { min: 1, max: 20, step: 0.5 },
+  heightIn: { min: 1, max: 20, step: 0.5 },
+  dpi: { min: 72, max: 600, step: 1, presets: [72, 150, 300, 600] },
+  /** Hard safety limits for the generated bitmap. */
+  maxSidePx: 12000,
+  maxPixels: 80_000_000,
+  fileBase: { pk: 'pk-profile', er: 'exposure-response' },
+  fontFamily: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif',
+  backgroundLight: '#ffffff',
+  backgroundDark: '#0f172a',
+  titleColorLight: '#1e293b',
+  titleColorDark: '#e2e8f0',
+};
+
 // ───────────────────────── Chart ─────────────────────────
 export const CHART = {
   width: 800,
@@ -381,6 +404,9 @@ export const PERSISTENCE = {
     chartXMax: 'chart.customXMax',
     chartXStep: 'chart.customXStep',
     chartZoom: 'chart.zoomRange',
+    showWindow: 'chart.showTherapeuticWindow',
+    downloadOpts: 'chart.download',
+    windowColor: 'chart.therapeuticWindowColor',
     erModel: 'er.model',
     erPops: 'er.pops',
     erEquationsTab: 'er.equationsTab',

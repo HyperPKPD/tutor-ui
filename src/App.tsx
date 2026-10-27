@@ -29,10 +29,10 @@ const SaveIndicator: React.FC<{ isDark: boolean }> = ({ isDark }) => {
         onClick={() => { if (confirming) void resetAll(); else setConfirming(true); }}
         onBlur={() => setConfirming(false)}
         title="Erase all saved settings and quiz history and restore defaults"
-        className={`flex items-center gap-1 px-1.5 py-0.5 rounded border cursor-pointer ${
+        className={`flex items-center gap-1 px-1.5 py-0.5 rounded cursor-pointer ${
           confirming
-            ? 'border-rose-500 bg-rose-600 text-white'
-            : isDark ? 'border-slate-700 text-slate-300 hover:bg-slate-800' : 'border-blue-300 text-white hover:bg-blue-800'
+            ? 'bg-rose-600 text-white'
+            : isDark ? 'text-slate-300 hover:bg-slate-800' : 'text-white hover:bg-blue-800'
         }`}
       >
         <RotateCcw className="w-3 h-3" />
@@ -69,8 +69,8 @@ const App: React.FC = () => {
           <button
             onClick={toggleTheme}
             aria-label="Toggle theme"
-            className={`p-1.5 rounded border cursor-pointer ${
-              isDark ? 'border-slate-700 text-slate-300 hover:bg-slate-800' : 'border-blue-300 text-white hover:bg-blue-800'
+            className={`p-1.5 rounded cursor-pointer ${
+              isDark ? 'text-slate-300 hover:bg-slate-800' : 'text-white hover:bg-blue-800'
             }`}
           >
             {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pill } from 'lucide-react';
-import { CLINICAL_PRESETS, LN2, PARAM_UI, PARAM_UI_TMDD, PRESET_BUTTONS, TAU_OPTIONS } from '../../config/appConfig';
+import { CLINICAL_PRESETS, LN2, PARAM_UI, PARAM_UI_TMDD, PRESET_BUTTONS, TAU_OPTIONS, WINDOW_COLOR } from '../../config/appConfig';
 import { isOral, isTmdd, peripheralCount, type ModelType, type PopState, type TmddRoute } from './types';
 import { getEffectiveParams, macroRates } from './pkEngine';
 import { ParamSlider, faint, inputCls, label, muted, panelCard } from './ui';
@@ -17,10 +17,14 @@ interface Props {
   onChange: (patch: Partial<PopState>) => void;
   onCopyFrom: (src: number) => void;
   onLoadMab: () => void;
+  showWindow: boolean;
+  onShowWindow: (v: boolean) => void;
+  windowColor: string;
+  onWindowColor: (c: string) => void;
 }
 
 export const PopulationPanel: React.FC<Props> = ({
-  isDark, model, route, pops, activeIdx, visible, onSelect, onChange, onCopyFrom, onLoadMab,
+  isDark, model, route, pops, activeIdx, visible, onSelect, onChange, onCopyFrom, onLoadMab, showWindow, onShowWindow, windowColor, onWindowColor,
 }) => {
   const p = pops[activeIdx];
   const tmdd = isTmdd(model);
@@ -234,9 +238,11 @@ export const PopulationPanel: React.FC<Props> = ({
 
         {/* Target window */}
         <div className={panelCard(isDark)}>
-          <h4 className="font-semibold mb-3 uppercase tracking-wider text-[11px] text-amber-600 dark:text-amber-400">
-            Target Therapeutic Window
-          </h4>
+          <div className="mb-3">
+            <h4 className="font-semibold uppercase tracking-wider text-[11px] text-amber-600 dark:text-amber-400">
+              Target Therapeutic Window
+            </h4>
+          </div>
           <div className="grid grid-cols-2 gap-3 font-mono">
             {([['mec', 'MEC (Min Effective)'], ['mtc', 'MTC (Min Toxic)']] as const).map(([key, text]) => (
               <div key={key}>
@@ -251,8 +257,36 @@ export const PopulationPanel: React.FC<Props> = ({
               </div>
             ))}
           </div>
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+            <div role="radiogroup" aria-label="Show therapeutic window on chart" className="flex items-center gap-3 text-[11px] font-mono">
+              <span className={muted(isDark)}>Show on graph:</span>
+              {([[true, 'On'], [false, 'Off']] as const).map(([val, text]) => (
+                <label key={text} className={`flex items-center gap-1 cursor-pointer ${label(isDark)}`}>
+                  <input
+                    type="radio"
+                    name="show-therapeutic-window"
+                    checked={showWindow === val}
+                    onChange={() => onShowWindow(val)}
+                    className="accent-amber-500 cursor-pointer"
+                  />
+                  <span>{text}</span>
+                </label>
+              ))}
+            </div>
+            <div className="flex items-center gap-2 text-[11px] font-mono">
+              <span className={muted(isDark)}>Color:</span>
+              <input type="color" aria-label="Therapeutic window color" value={windowColor}
+                onChange={(e) => onWindowColor(e.target.value)}
+                className="w-7 h-6 p-0 border rounded cursor-pointer bg-transparent" />
+              {WINDOW_COLOR.presets.map((c) => (
+                <button key={c} type="button" title={c} aria-label={`Use color ${c}`} onClick={() => onWindowColor(c)}
+                  className={`w-4 h-4 rounded-full cursor-pointer border ${windowColor === c ? 'ring-2 ring-offset-1 ring-amber-500' : ''}`}
+                  style={{ backgroundColor: c }} />
+              ))}
+            </div>
+          </div>
           <p className={`mt-2 text-[10px] ${muted(isDark)}`}>
-            The shaded band on the chart follows the population you are editing (if it is shown).
+            When on, the shaded band on the chart follows the population you are editing (if it is shown). The status badges still use MEC and MTC.
           </p>
         </div>
       </div>

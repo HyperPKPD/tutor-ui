@@ -6,6 +6,8 @@ import * as sanitize from '../../db/sanitize';
 import { concForEffect, effectAt, hasPlateau, sampleCurve } from '../../er/erEngine';
 import type { ErModel, ErPop } from '../../er/erTypes';
 import { Segmented, faint, muted } from './ui';
+import { ChartDownload, type LegendItem } from './ChartDownload';
+import { DOWNLOAD } from '../../config/appConfig';
 
 export interface ErSeries {
   name: string;
@@ -283,6 +285,8 @@ export const ErChart: React.FC<Props> = ({ isDark, title, model, series, refIdx 
               </div>
             )}
           </div>
+          <ChartDownload isDark={isDark} getSvg={() => svgRef.current} title={title} fileBase={DOWNLOAD.fileBase.er}
+            legend={shown.map((x): LegendItem => ({ label: x.name.replace('Population ', 'Pop '), color: x.color, kind: 'line' }))} />
           <div className="hidden sm:flex items-center gap-3 text-xs font-mono flex-wrap">
             {shown.map((s) => (
               <span key={s.name} className="flex items-center gap-1.5" style={{ color: s.color }}>

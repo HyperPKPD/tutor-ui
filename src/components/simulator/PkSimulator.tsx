@@ -3,7 +3,7 @@ import { AlertCircle, CheckCircle2, Eye, EyeOff, ShieldAlert } from 'lucide-reac
 import { useTheme } from '../../context/ThemeContext';
 import {
   ANALYSIS_MODES, DEFAULT_ACTIVE_POP, DEFAULT_ANALYSIS_MODE, DEFAULT_ER_MODEL, DEFAULT_MODEL, DEFAULT_TMDD_READOUT,
-  DEFAULT_TMDD_ROUTE, ER_EXPOSURE_SOURCES, ER_MODELS, LAYOUT, MODEL_GROUPS, PERSISTENCE, POP_COLORS, POP_COUNT, POP_NAMES,
+  DEFAULT_TMDD_ROUTE, ER_EXPOSURE_SOURCES, ER_MODELS, LAYOUT, MODEL_GROUPS, PERSISTENCE, POP_COLORS, POP_COUNT, POP_NAMES, WINDOW_COLOR,
   TMDD_READOUT_OPTIONS, TMDD_ROUTE_OPTIONS,
   type AnalysisMode,
 } from '../../config/appConfig';
@@ -51,6 +51,8 @@ export const PkSimulator: React.FC = () => {
   const [pops, setPops] = usePersistedState<PopState[]>(K.pops, makeDefaultPops(), sanitize.pops);
   const [activeIdx, setActiveIdx] = usePersistedState<number>(K.activeIdx, DEFAULT_ACTIVE_POP, sanitize.index(POP_COUNT));
   const [visible, setVisible] = usePersistedState<boolean[]>(K.visible, ALL_VISIBLE, sanitize.visible);
+  const [windowColor, setWindowColor] = usePersistedState<string>(K.windowColor, WINDOW_COLOR.default, sanitize.hexColor);
+  const [showWindow, setShowWindow] = usePersistedState<boolean>(K.showWindow, true, sanitize.bool);
   const [erModel, setErModel] = usePersistedState<ErModel>(
     K.erModel, DEFAULT_ER_MODEL, sanitize.oneOf(ER_MODELS.map((m) => m.value))
   );
@@ -314,6 +316,9 @@ export const PkSimulator: React.FC = () => {
             onChange={updateActive}
             onCopyFrom={copyFrom}
             onLoadMab={loadMab}
+            showWindow={showWindow} windowColor={windowColor}
+            onShowWindow={setShowWindow}
+            onWindowColor={setWindowColor}
           />
         )}
 
@@ -409,6 +414,7 @@ export const PkSimulator: React.FC = () => {
             refIdx={refIdx}
             mec={pops[refIdx].mec}
             mtc={pops[refIdx].mtc}
+            showWindow={showWindow} windowColor={windowColor}
           />
 
           {/* Comparison metrics */}

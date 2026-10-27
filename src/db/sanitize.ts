@@ -74,3 +74,20 @@ export function erPops(raw: unknown, fb: ErPop[]): ErPop[] {
     return p;
   });
 }
+
+export interface DownloadOpts { widthIn: number; heightIn: number; dpi: number; title: boolean; transparent: boolean }
+export function downloadOpts(raw: unknown, fb: DownloadOpts): DownloadOpts {
+  const r = (raw ?? {}) as Record<string, unknown>;
+  const n = (v: unknown, lo: number, hi: number, d: number) =>
+    typeof v === 'number' && Number.isFinite(v) && v >= lo && v <= hi ? v : d;
+  return {
+    widthIn: n(r.widthIn, 1, 20, fb.widthIn),
+    heightIn: n(r.heightIn, 1, 20, fb.heightIn),
+    dpi: n(r.dpi, 72, 600, fb.dpi),
+    title: typeof r.title === 'boolean' ? r.title : fb.title,
+    transparent: typeof r.transparent === 'boolean' ? r.transparent : fb.transparent,
+  };
+}
+
+export const hexColor = (raw: unknown, fb: string): string =>
+  typeof raw === 'string' && /^#[0-9a-fA-F]{6}$/.test(raw) ? raw.toLowerCase() : fb;
